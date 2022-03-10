@@ -1,0 +1,27 @@
+ 
+/* Custom look for the well/sidebar panel 
+what I think I want:
+  1. White background, a little darker than the main panel
+  2. No borders, except on the right
+*/
+
+form.well{
+  border-radius: 0px;
+  background-color: #FFFFF2;
+  border-right: solid;
+  border-right-color #191919;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+}
+
+/* Custom look for user input lables 
+what I think I want:
+  1. Bold
+  2. Maybe a diffrent colour
+*/
+
+label.control-label{
+  font-weight: bold;
+  color: #191919;
+}

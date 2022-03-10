@@ -6,5 +6,5 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
-  
+  mod_aggregate_measures_server("aggregate_measures_ui_1")
 }

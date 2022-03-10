@@ -15,15 +15,29 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+
+usethis::use_package( "bslib" )
+usethis::use_package( "shinyWidgets" )
+usethis::use_package( "dplyr" )
+usethis::use_package( "DT" )
+usethis::use_pipe(export = FALSE)
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+
+golem::add_module( name = "aggregate_measures" ) 
+golem::add_module( name = "headcount_poverty" ) 
+golem::add_module( name = "headcount_indicators" ) 
+golem::add_module( name = "contribution_indicators" ) 
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
+golem::add_fct( "add_intro_text" )# Used in the About page
+golem::add_fct( "add_intro_img_dimensions_indicator" )# Used in the About page
+golem::add_fct( "add_intro_method_note" )# Used in the About page
+golem::add_fct( "add_pickerinput_shinywidget" ) # to add ui component pickerinput from shinywidgets
+golem::add_fct("subset_data_according_section") # to subset the raw release data as required by each section
+golem::add_utils( "helpers" )
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )
 
@@ -35,7 +49,7 @@ golem::add_css_file( "custom" )
 
 ## Add internal datasets ----
 ## If you have data in your package
-usethis::use_data_raw( name = "my_dataset", open = FALSE ) 
+usethis::use_data_raw( name = "raw_2021_release", open = FALSE )
 
 ## Tests ----
 ## Add one line by test you want to create

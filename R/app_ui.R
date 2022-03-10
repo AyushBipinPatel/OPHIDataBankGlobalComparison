@@ -10,7 +10,28 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic 
     fluidPage(
-      h1("OPHIDataBankGlobalComparison")
+      shiny::navbarPage(theme = bslib::bs_theme(bootswatch = "minty",),
+                        title = "OPHI Data Bank - Global Comparisions",
+                        shiny::tabPanel(title = "About",
+                                        add_intro_text(),
+                                        add_intro_img_dimensions_indicator(),
+                                        add_intro_method_note()
+                        ),
+                        shiny::tabPanel(
+                          title = "Aggregate Measures",
+                          mod_aggregate_measures_ui("aggregate_measures_ui_1")
+                          
+                        ),
+                        shiny::tabPanel(
+                          title = "Headcount of Poverty"
+                        ),
+                        shiny::tabPanel(
+                          title = "Deprivations in Indicators"
+                        ),
+                        shiny::tabPanel(
+                          title = "Contribution of Indicators"
+                          )
+      )
     )
   )
 }
@@ -28,15 +49,20 @@ golem_add_external_resources <- function(){
   add_resource_path(
     'www', app_sys('app/www')
   )
- 
+  
   tags$head(
     favicon(),
     bundle_resources(
       path = app_sys('app/www'),
-      app_title = 'OPHIDataBankGlobalComparison'
-    )
+      app_title = 'OPHIGlobalComparisions'
+    ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert() 
+    tags$link(
+      rel="stylesheet", 
+      type="text/css", 
+      href="www/custom.css"
+    )
   )
 }
 
