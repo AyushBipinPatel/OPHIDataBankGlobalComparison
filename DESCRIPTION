@@ -1,19 +1,25 @@
-Package: OPHIDataBankGlobalComparison
-Title: An Amazing Shiny App
+Package: OPHIGlobalComparisions
+Title: A golem package to create an app for global comparisions of Multidimensional Poverty Index
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
-           role = c("aut", "cre"),
-           email = "your@email.com")
-Description: What the package does (one paragraph).
-License: What license is it under?
+Authors@R: person('Ayush', 'Patel', email = 'ayush.ap58@gmail.com', role = c('cre', 'aut'))
+Description: OPHIGlobalComparisions package allows users to acces a web application through which they can interact with the OPHI data bank. The users will be able to see comparisions of Aggregate measures (MPI,H,A), comparision of Headcount of poverty (MPI vs $1.90/day) and contribution of various indicators to poverty. 
+License: MIT + file LICENSE
 Imports: 
+    attempt,
     config (>= 0.3.1),
+    DT,
+    glue,
     golem (>= 0.3.1),
+    htmltools,
+    processx,
     shiny (>= 1.7.1)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 URL: https://github.com/AyushBipinPatel/OPHIDataBankGlobalComparison
 BugReports: https://github.com/AyushBipinPatel/OPHIDataBankGlobalComparison/issues
+Suggests: 
+    spelling,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Language: en-US
