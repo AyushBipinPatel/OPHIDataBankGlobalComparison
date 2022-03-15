@@ -23,7 +23,8 @@ app_ui <- function(request) {
                           
                         ),
                         shiny::tabPanel(
-                          title = "Headcount of Poverty"
+                          title = "Headcount of Poverty",
+                          mod_headcount_indicators_ui("headcount_indicators_ui_1")
                         ),
                         shiny::tabPanel(
                           title = "Deprivations in Indicators"
