@@ -31,4 +31,16 @@ rbind(
 )-> raw_2021_release
 
 
+raw_2021_release %>% 
+  mutate(
+    ccty = as.factor(ccty),
+    cty_lab = as.factor(cty_lab),
+    area_lab = as.factor(area_lab),
+    ind_lab = as.factor(ind_lab),
+    measure_lab = as.factor(measure_lab),
+    survey = as.factor(survey),
+    year = as.factor(year),
+    w_region = as.factor(w_region),
+  ) -> raw_2021_release
+
 usethis::use_data(raw_2021_release, overwrite = TRUE,internal = TRUE)

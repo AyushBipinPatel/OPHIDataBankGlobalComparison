@@ -78,7 +78,16 @@ mod_aggregate_measures_server <- function(id){
     
     output$table <- DT::renderDT({
       
-      agg_measures_data()
+      DT::datatable(
+        agg_measures_data() %>% 
+          dplyr::select(-c("ind_lab","misind_lab","measure")),
+        colnames = c("Value","ISO","Country","Area","Measure","Survey","Survey Year","World Region"),
+        filter = list(position = 'top', clear = FALSE),
+        options = list(
+          columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        )
+                    )
+      
     })
     
     
