@@ -116,7 +116,7 @@ mod_aggregate_measures_server <- function(id){
                               y_axis = "b",
                               title = paste0(col_chart_title," at",sel_area()," Level"),
                               flname = paste0(col_chart_title," at",sel_area()," Level"), # same as the chart title as it would make sense to save a chart by its title 
-                              tooltip = paste("Measure : ",sel_measure(),"<br>Measure Value : {point.y}<br>Survey : {point.survey} <br>Survey Year : {point.year}"),
+                              tooltip = paste("Measure : ",col_chart_title,"<br>Measure Value : {point.y}<br>Survey : {point.survey} <br>Survey Year : {point.year}"),
                               xtitle = NULL,
                               ytitle = col_chart_title)
     })
