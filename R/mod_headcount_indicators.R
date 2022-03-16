@@ -25,16 +25,26 @@ mod_headcount_indicators_ui <- function(id){
             
             add_pickerinput_shinywidget(inputID = ns("hri_measures"),
                                         label = "Measures",
-                                        choices = c("afg","ind","chn"),
-                                        selected = "afg"),
+                                        choices = c("Censored headcount ratio",
+                                                    "Uncensored headcount ratio"),
+                                        selected = "Censored headcount ratio"),
             add_pickerinput_shinywidget(inputID = ns("hri_area"),
                                         label = "Areas",
                                         choices = c("National","Urban","Rural"),
                                         selected = "National"),
             add_pickerinput_shinywidget(inputID = ns("hri_indicators"),
-                                        label = "indicators",
-                                        choices = c("assests","Sanitation","Electricity"),
-                                        selected = "Electricity"),
+                                        label = "Indicators",
+                                        choices = c("Child mortality",
+                                                    "Years of schooling",
+                                                    "School attendance",
+                                                    "Cooking fuel",
+                                                    "Sanitation",
+                                                    "Drinking water",
+                                                    "Electricity",
+                                                    "Housing",
+                                                    "Assets",
+                                                    "Nutrition"),
+                                        selected = "Nutrition"),
             shiny::actionButton(inputId = ns("hrisubmit"),
                                 label = "Show Results")
             
@@ -45,7 +55,8 @@ mod_headcount_indicators_ui <- function(id){
             shiny::tabPanel("Spatial Representation",
                             shiny::plotOutput(ns("map"),height = "500px")),
             shiny::tabPanel("Column Chart",
-                            shiny::plotOutput(ns("bar"),height = "500px")),
+                            highcharter::highchartOutput(ns("bar"), width = "100%", 
+                                                         height = "500px")),
             shiny::tabPanel("Table",
                             DT::DTOutput(ns("table"),height = "500px"))
           ),width = 10
@@ -61,12 +72,50 @@ mod_headcount_indicators_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    output$table <- DT::renderDataTable({
-      shinipsum::random_DT(nrow = 5,ncol = 3)
+    # get reactive inputs
+    
+    sel_area <- shiny::eventReactive(input$hrisubmit,{
+      input$hri_area
     })
     
-    output$bar <- shiny::renderPlot({
-      shinipsum::random_ggplot()
+    sel_measures <- shiny::eventReactive(input$hrisubmit,{
+      input$hri_measures
+    })
+    
+    sel_indicators <- shiny::eventReactive(input$hrisubmit,{
+      input$hri_indicators
+    })
+    
+    # get reactive data
+    
+    hri_data <- shiny::eventReactive(input$hrisubmit,{
+      
+      subset_data_according_section(section = "h_indicators") %>% 
+        dplyr::filter(measure_lab == input$hri_measures &
+                        area_lab ==  input$hri_area & ind_lab == input$hri_indicators)
+    })
+    
+    output$table <- DT::renderDataTable({
+      DT::datatable(
+        hri_data() %>% 
+          dplyr::select(-c("measure","misind_lab")),
+        colnames = c("Value","ISO","Country","Area","Indicator","Measure","Survey","Survey Year","World Region"),
+        filter = list(position = 'top', clear = FALSE),
+        options = list(
+          columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        )
+      )
+    })
+    
+    output$bar <- highcharter::renderHighchart({
+      hch_simple_column_chart(hri_data() %>% dplyr::arrange(dplyr::desc(b)),
+                              x_axis = "cty_lab",
+                              y_axis = "b",
+                              title = paste0(sel_measures()," (%) of ",sel_indicators()," at ",sel_area()," Level"),
+                              flname = paste0(sel_measures()," (%) of ",sel_indicators()," at ",sel_area()," Level"), # same as the chart title as it would make sense to save a chart by its title 
+                              tooltip = paste("Measure : ",sel_measures(),"<br>Measure Value : {point.y}<br>Survey : {point.survey} <br>Survey Year : {point.year}"),
+                              xtitle = NULL,
+                              ytitle = sel_measures())
     })
     
     output$map <- shiny::renderPlot({
