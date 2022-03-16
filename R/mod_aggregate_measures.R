@@ -29,11 +29,11 @@ mod_aggregate_measures_ui <- function(id){
           add_pickerinput_shinywidget(inputID = ns("agmeasures"),
                                       label = "Choose a Measure",
                                       choices = c(
-                                        "Headcount ratio",
-                                        "Intensity",
-                                        "MPI",
-                                        "Severe Poor",
-                                        "Vulnerable"
+                                        "H - Headcount ratio of poverty (%)" = "Headcount ratio",
+                                        "A - Intensity of Poverty (%)" = "Intensity",
+                                        "MPI - Multidimensional Poverty Index (range 0 to 1)" = "MPI",
+                                        "Headcount ratio of Severe Poverty  (K>50%) (%)" = "Severe Poor",
+                                        "Vulnerability to poverty (20% < K <33.32%) (%)" = "Vulnerable"
                                       ),
                                       selected = "MPI"),
           add_pickerinput_shinywidget(inputID = ns("agarea"),
@@ -50,7 +50,8 @@ mod_aggregate_measures_ui <- function(id){
             shiny::tabPanel("Spatial Representation",
                             shiny::plotOutput(ns("map"),height = "500px")),
             shiny::tabPanel("Column Chart",
-                            shiny::plotOutput(ns("bar"),height = "500px")),
+                          highcharter::highchartOutput(ns("bar"), width = "100%", 
+                                            height = "500px")),
             shiny::tabPanel("Table",
                             DT::DTOutput(ns("table"),height = "500px")
             )
@@ -67,6 +68,11 @@ mod_aggregate_measures_ui <- function(id){
 mod_aggregate_measures_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    
+    sel_measure <- shiny::eventReactive(input$agsubmit,{input$agmeasures})
+    sel_area <- shiny::eventReactive(input$agsubmit,{input$agarea})
+    
+    
     
     agg_measures_data <- shiny::eventReactive(input$agsubmit,{
       
@@ -91,9 +97,29 @@ mod_aggregate_measures_server <- function(id){
     })
     
     
-    # output$bar <- shiny::renderPlot({
-    #   
-    # })
+    output$bar <- highcharter::renderHighchart({
+      
+      # create column title first
+      col_chart_title <- switch (
+        sel_measure(),
+        "Headcount ratio" = "H - Headcount ratio of poverty (%)" ,
+        "Intensity" = "A - Intensity of Poverty (%)" ,
+        "MPI" = "MPI - Multidimensional Poverty Index (range 0 to 1)" ,
+        "Severe Poor" = "Headcount ratio of Severe Poverty  (K>50%) (%)" ,
+        "Vulnerable" = "Vulnerability to poverty (20% < K <33.32%) (%)"
+      )
+      
+      # now the chart function
+      
+      hch_simple_column_chart(agg_measures_data() %>% dplyr::arrange(desc(b)),
+                              x_axis = "cty_lab",
+                              y_axis = "b",
+                              title = paste0(col_chart_title," at",sel_area()," Level"),
+                              flname = paste0(col_chart_title," at",sel_area()," Level"), # same as the chart title as it would make sense to save a chart by its title 
+                              tooltip = paste("Measure : ",sel_measure(),"<br>Measure Value : {point.y}<br>Survey : {point.survey} <br>Survey Year : {point.year}"),
+                              xtitle = NULL,
+                              ytitle = col_chart_title)
+    })
     # 
     # output$map <- shiny::renderPlot({
     #   
