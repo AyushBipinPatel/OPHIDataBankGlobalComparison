@@ -26,6 +26,6 @@ devtools::install_github("AyushBipinPatel/OPHIDataBankGlobalComparison")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(OPHIGlobalComparisions)
+library(OPHIDataBankGlobalComparison)
 ## basic example code
 ```
