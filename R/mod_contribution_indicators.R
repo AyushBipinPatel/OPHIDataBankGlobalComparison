@@ -26,8 +26,11 @@ mod_contribution_indicators_ui <- function(id){
             
             add_pickerinput_shinywidget(inputID = ns("ci_measures"),
                                         label = "Measures",
-                                        choices = c("afg","ind","chn"),
-                                        selected = "afg"),
+                                        choices = c(
+                                          "Absolute contribution" = "Absolute contribution",
+                                          "Percentage (%) Contribution" = "Relative contribution"
+                                          ),
+                                        selected = "Absolute contribution"),
             add_pickerinput_shinywidget(inputID = ns("ci_area"),
                                         label = "Areas",
                                         choices = c("National","Urban","Rural"),
@@ -57,8 +60,36 @@ mod_contribution_indicators_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    # get reactive inputs
+    
+    sel_area <- shiny::eventReactive(input$cisubmit,{
+      input$ci_area
+    })
+    
+    sel_measures <- shiny::eventReactive(input$cisubmit,{
+      input$ci_measures
+    })
+    
+    
+    # get reactive data
+    
+    ci_data <- shiny::eventReactive(input$cisubmit,{
+      
+      subset_data_according_section(section = "contri_indicators") %>% 
+        dplyr::filter(measure_lab == input$ci_measures &
+                        area_lab ==  input$ci_area )
+    })
+    
     output$table <- DT::renderDataTable({
-      shinipsum::random_DT(nrow = 5,ncol = 3)
+      DT::datatable(
+        ci_data() %>% 
+          dplyr::select(-c("misind_lab","measure")),
+        colnames = c("Value","ISO","Country","Area","Indicator","Measure","Survey","Survey Year","World Region"),
+        filter = list(position = 'top', clear = FALSE),
+        options = list(
+          columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        )
+      )
     })
     
     output$bar <- shiny::renderPlot({
