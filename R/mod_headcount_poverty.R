@@ -37,8 +37,23 @@ mod_headcount_poverty_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    
     output$table <- DT::renderDataTable({
-      shinipsum::random_DT(nrow = 5,ncol = 3)
+      
+      DT::datatable(
+        raw_2021_release %>% 
+          dplyr::filter(measure %in% c("H","H_190","sev") & 
+                          (is.na(area_lab) |area_lab == "National")) %>% 
+          dplyr::select(-c("area_lab","ind_lab","misind_lab","measure")) %>% 
+          dplyr::arrange(ccty) %>% 
+          tidyr::fill(cty_lab,.direction = "down"),
+        colnames = c("Value","ISO","Country","Measure","Survey","Survey Year","World Region"),
+        filter = list(position = 'top', clear = FALSE),
+        options = list(
+          columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        )
+      )
+      
     })
     
     output$bar <- shiny::renderPlot({
