@@ -111,7 +111,7 @@ mod_aggregate_measures_server <- function(id){
       
       # now the chart function
       
-      hch_simple_column_chart(agg_measures_data() %>% dplyr::arrange(desc(b)),
+      hch_simple_column_chart(agg_measures_data() %>% dplyr::arrange(dplyr::desc(b)),
                               x_axis = "cty_lab",
                               y_axis = "b",
                               title = paste0(col_chart_title," at",sel_area()," Level"),

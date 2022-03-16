@@ -1,8 +1,8 @@
-Package: OPHIGlobalComparisions
+Package: OPHIDataBankGlobalComparison
 Title: A golem package to create an app for global comparisions of Multidimensional Poverty Index
 Version: 0.0.0.9000
 Authors@R: person('Ayush', 'Patel', email = 'ayush.ap58@gmail.com', role = c('cre', 'aut'))
-Description: OPHIGlobalComparisions package allows users to acces a web application through which they can interact with the OPHI data bank. The users will be able to see comparisions of Aggregate measures (MPI,H,A), comparision of Headcount of poverty (MPI vs $1.90/day) and contribution of various indicators to poverty. 
+Description: OPHIDataBankGlobalComparison package allows users to acces a web application through which they can interact with the OPHI data bank. The users will be able to see comparisions of Aggregate measures (MPI,H,A), comparision of Headcount of poverty (MPI vs $1.90/day) and contribution of various indicators to poverty. 
 License: MIT + file LICENSE
 Imports: 
     attempt,
@@ -12,6 +12,7 @@ Imports:
     DT,
     glue,
     golem (>= 0.3.1),
+    highcharter,
     htmltools,
     magrittr,
     processx,

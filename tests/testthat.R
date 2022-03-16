@@ -1,4 +1,4 @@
 library(testthat)
-library(OPHIGlobalComparisions)
+library(OPHIDataBankGlobalComparison)
 
-test_check("OPHIGlobalComparisions")
+test_check("OPHIDataBankGlobalComparison")
