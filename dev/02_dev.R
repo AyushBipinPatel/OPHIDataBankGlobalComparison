@@ -22,6 +22,7 @@ usethis::use_package( "dplyr" )
 usethis::use_package( "DT" )
 usethis::use_package("highcharter")
 usethis::use_package("tidyr")
+usethis::use_package("forcats")
 usethis::use_pipe(export = FALSE)
 
 ## Add modules ----
@@ -40,6 +41,7 @@ golem::add_fct( "add_intro_method_note" )# Used in the About page
 golem::add_fct( "add_pickerinput_shinywidget" ) # to add ui component pickerinput from shinywidgets
 golem::add_fct("subset_data_according_section") # to subset the raw release data as required by each section
 golem::add_fct("hch_simple_column_chart") # A function to create simple column charts using the highcharter library
+golem::add_fct("hch_stacked_column_chart") # A function to create absolute or relative stacked column charts using the highcharter library
 golem::add_utils( "helpers" )
 golem::add_fct( "helpers" ) 
 golem::add_utils( "helpers" )

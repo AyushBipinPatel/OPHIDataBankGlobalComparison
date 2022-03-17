@@ -36,13 +36,12 @@ raw_2021_release %>%
     ccty = as.factor(ccty),
     cty_lab = as.factor(cty_lab),
     area_lab = as.factor(area_lab),
-    ind_lab = as.factor(ind_lab),
+    ind_lab = forcats::fct_relevel(as.factor(ind_lab),
+                                   c("Nutrition","Child mortality","Years of schooling","School attendance","Cooking fuel","Sanitation","Drinking water","Electricity","Housing","Assets")),
     measure_lab = as.factor(ifelse(measure == "H_190","1.90$ a day",measure_lab)),
     survey = as.factor(survey),
     year = as.factor(year),
     w_region = as.factor(w_region),
   ) -> raw_2021_release
-
-
 
 usethis::use_data(raw_2021_release, overwrite = TRUE,internal = TRUE)
