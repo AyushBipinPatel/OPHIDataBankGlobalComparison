@@ -22,7 +22,7 @@ mod_headcount_poverty_ui <- function(id){
         shiny::tabsetPanel(
           shiny::tabPanel("Column Chart",
                           shiny::plotOutput(ns("bar"),height = "500px")),
-          shiny::tabPanel("Table",
+          shiny::tabPanel("Data Table",
                           DT::DTOutput(ns("table"),height = "500px"))
         )
     )

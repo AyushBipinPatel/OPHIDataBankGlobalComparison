@@ -45,7 +45,7 @@ mod_contribution_indicators_ui <- function(id){
             shiny::tabPanel("Column Chart",
                             highcharter::highchartOutput(ns("bar"),width = "100%",
                                                          height = "800px" )),
-            shiny::tabPanel("Table",
+            shiny::tabPanel("Data Table",
                             DT::DTOutput(ns("table"),height = "500px"))
           ),width = 10
         ))

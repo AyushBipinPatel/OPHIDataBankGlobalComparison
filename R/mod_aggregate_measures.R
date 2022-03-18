@@ -52,7 +52,7 @@ mod_aggregate_measures_ui <- function(id){
             shiny::tabPanel("Column Chart",
                           highcharter::highchartOutput(ns("bar"), width = "100%", 
                                             height = "500px")),
-            shiny::tabPanel("Table",
+            shiny::tabPanel("Data Table",
                             DT::DTOutput(ns("table"),height = "500px")
             )
           ),width = 10
