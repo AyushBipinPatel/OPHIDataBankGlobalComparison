@@ -15,6 +15,7 @@ Imports:
     golem (>= 0.3.1),
     highcharter,
     htmltools,
+    htmlwidgets,
     magrittr,
     processx,
     shiny (>= 1.7.1),

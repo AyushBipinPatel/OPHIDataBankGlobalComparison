@@ -23,6 +23,7 @@ usethis::use_package( "DT" )
 usethis::use_package("highcharter")
 usethis::use_package("tidyr")
 usethis::use_package("forcats")
+usethis::use_package("htmlwidgets")
 usethis::use_pipe(export = FALSE)
 
 ## Add modules ----

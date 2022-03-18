@@ -110,7 +110,12 @@ mod_headcount_poverty_server <- function(id){
             'function(){
               if(this.series.name == "1.90$ a day"){
               return this.point.cty_lab + "<br>" + this.series.name + ":" + this.point.y + "<br>Source : World bank";
-              }else{return this.point.cty_lab + "<br>" + this.point.measure_lab + ":" + this.point.y + "<br>Survey : " + this.point.survey + "<br>Survey year : " + this.point.year + "<br>Total MPI Poor : " + this.point.stackTotal;}
+              }else{
+              if(this.point.measure_lab == "poor_not_severe"){
+              return this.point.cty_lab + "<br>MPI Poor not in severe poverty :" + this.point.y + "<br>Survey : " + this.point.survey + "<br>Survey year : " + this.point.year + "<br>Total MPI Poor : " + this.point.stackTotal;
+              }else{
+              return this.point.cty_lab + "<br>MPI Poor in severe Poverty (K>50) :" + this.point.y + "<br>Survey : " + this.point.survey + "<br>Survey year : " + this.point.year + "<br>Total MPI Poor : " + this.point.stackTotal;
+              }}
             }'
           )
         ) %>% 

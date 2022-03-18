@@ -42,6 +42,9 @@ raw_2021_release %>%
     survey = as.factor(survey),
     year = as.factor(year),
     w_region = as.factor(w_region),
+    b = ifelse(measure == "M0", 
+               round(b,3),
+               round(b,2))
   ) -> raw_2021_release
 
 usethis::use_data(raw_2021_release, overwrite = TRUE,internal = TRUE)
