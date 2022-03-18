@@ -21,7 +21,8 @@ mod_headcount_poverty_ui <- function(id){
         ),
         shiny::tabsetPanel(
           shiny::tabPanel("Column Chart",
-                          shiny::plotOutput(ns("bar"),height = "500px")),
+                          highcharter::highchartOutput(ns("bar"),
+                                                       width = "100%",height = "800px")),
           shiny::tabPanel("Data Table",
                           DT::DTOutput(ns("table"),height = "500px"))
         )
@@ -37,15 +38,17 @@ mod_headcount_poverty_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    data_hp <- raw_2021_release %>% 
+      dplyr::filter(measure %in% c("H","H_190","sev") & 
+                      (is.na(area_lab) |area_lab == "National")) %>% 
+      dplyr::select(-c("area_lab","ind_lab","misind_lab","measure")) %>% 
+      dplyr::arrange(ccty) %>% 
+      tidyr::fill(cty_lab,.direction = "down")
     
     output$table <- DT::renderDataTable({
       
       DT::datatable(
-        raw_2021_release %>% 
-          dplyr::filter(measure %in% c("H","H_190","sev") & 
-                          (is.na(area_lab) |area_lab == "National")) %>% 
-          dplyr::select(-c("area_lab","ind_lab","misind_lab","measure")) %>% 
-          dplyr::arrange(ccty) %>% 
+        data_hp %>% 
           tidyr::fill(cty_lab,.direction = "down"),
         colnames = c("Value","ISO","Country","Measure","Survey","Survey Year","World Region"),
         filter = list(position = 'top', clear = FALSE),
@@ -56,8 +59,66 @@ mod_headcount_poverty_server <- function(id){
       
     })
     
-    output$bar <- shiny::renderPlot({
-      shinipsum::random_ggplot()
+    output$bar <- highcharter::renderHighchart({
+      
+      
+      highcharter::hchart(object = data_hp %>% 
+                            dplyr::filter(measure_lab!= "1.90$ a day") %>% 
+                            tidyr::pivot_wider(names_from = measure_lab,values_from = b) %>% 
+                            dplyr::mutate(
+                              poor_not_severe = `Headcount ratio` - `Severe Poor`
+                            ) %>% 
+                            tidyr::pivot_longer(cols = c("poor_not_severe","Severe Poor"),
+                                                names_to = "measure_lab",
+                                                values_to = "b") %>% 
+                            dplyr::mutate(
+                              cty_lab = forcats::fct_reorder(as.factor(cty_lab),
+                                                                       `Headcount ratio`)
+                            ) %>% 
+                            dplyr::arrange(dplyr::desc(cty_lab)),
+                          type = "column", 
+                          highcharter::hcaes(x = cty_lab,
+                                             y = b,
+                                             group = measure_lab)) %>% 
+        highcharter::hc_plotOptions(
+          series = list(
+            stacking = "normal"
+          )
+        ) %>% 
+        highcharter::hc_add_series(data = data_hp %>% 
+                                     dplyr::filter(measure_lab == "1.90$ a day"),
+                                   type = "point",
+                                   highcharter::hcaes(x = cty_lab,
+                                                      y = b),
+                                   name = "1.90$ a day") %>% 
+        highcharter::hc_exporting(
+        enabled = TRUE, 
+        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+                         ) %>% 
+        highcharter::hc_title(
+          text = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level",
+          margin = 20,
+          align = "left",
+          style = list(color = "#22A884", useHTML = TRUE)
+        )  %>% 
+        highcharter::hc_chart(zoomType = "x") %>% 
+        highcharter::hc_xAxis(title = list(text = NULL),
+                              scrollbar = list(enabled = T),minrange = 5) %>% 
+        highcharter::hc_yAxis(title = list(text = "% of population")) %>% 
+        highcharter::hc_tooltip(
+          formatter = htmlwidgets::JS(
+            'function(){
+              if(this.series.name == "1.90$ a day"){
+              return this.point.cty_lab + "<br>" + this.series.name + ":" + this.point.y + "<br>Source : World bank";
+              }else{return this.point.cty_lab + "<br>" + this.point.measure_lab + ":" + this.point.y + "<br>Survey : " + this.point.survey + "<br>Survey year : " + this.point.year + "<br>Total MPI Poor : " + this.point.stackTotal;}
+            }'
+          )
+        ) %>% 
+        highcharter::hc_colors(
+          c("#c14c54", "#7c1419","#191919")
+        )
+      
+      
     })
  
   })
