@@ -53,7 +53,8 @@ mod_headcount_indicators_ui <- function(id){
         mainPanel = shiny::mainPanel(
           shiny::tabsetPanel(
             shiny::tabPanel("Spatial Representation",
-                            shiny::plotOutput(ns("map"),height = "500px")),
+                            highcharter::highchartOutput(ns("map"),width = "100%",
+                                                         height = "700px")),
             shiny::tabPanel("Column Chart",
                             highcharter::highchartOutput(ns("bar"), width = "100%", 
                                                          height = "500px")),
@@ -118,8 +119,12 @@ mod_headcount_indicators_server <- function(id){
                               ytitle = sel_measures())
     })
     
-    output$map <- shiny::renderPlot({
-      shinipsum::random_ggplot()
+    output$map <- highcharter::renderHighchart({
+      hch_choropleth(
+        passed_data = hri_data(),
+        catch_sel_measure = paste(sel_measures()," of", sel_indicators()),
+        catch_sel_area = sel_area()
+      )
     })
  
   })
