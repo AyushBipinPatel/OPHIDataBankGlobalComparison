@@ -47,4 +47,13 @@ raw_2021_release %>%
                round(b,2))
   ) -> raw_2021_release
 
-usethis::use_data(raw_2021_release, overwrite = TRUE,internal = TRUE)
+
+
+
+## Th layout has to be saved as well for internal use
+
+map_layout_data <- highcharter::download_map_data("custom/world-robinson-highres.js")
+
+# Save objects
+
+usethis::use_data(raw_2021_release, map_layout_data, overwrite = TRUE,internal = TRUE)

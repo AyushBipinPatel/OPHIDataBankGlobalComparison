@@ -48,7 +48,8 @@ mod_aggregate_measures_ui <- function(id){
         mainPanel = shiny::mainPanel(
           shiny::tabsetPanel(
             shiny::tabPanel("Spatial Representation",
-                            shiny::plotOutput(ns("map"),height = "500px")),
+                            highcharter::highchartOutput(ns("map"), width = "100%", 
+                                                         height = "700px")),
             shiny::tabPanel("Column Chart",
                           highcharter::highchartOutput(ns("bar"), width = "100%", 
                                             height = "500px")),
@@ -120,10 +121,27 @@ mod_aggregate_measures_server <- function(id){
                               xtitle = NULL,
                               ytitle = col_chart_title)
     })
-    # 
-    # output$map <- shiny::renderPlot({
-    #   
-    # })
+    
+    
+     
+     output$map <- highcharter::renderHighchart({
+       
+       map_chart_title <- switch (
+         sel_measure(),
+         "Headcount ratio" = "H - Headcount ratio of poverty (%)" ,
+         "Intensity" = "A - Intensity of Poverty (%)" ,
+         "MPI" = "MPI - Multidimensional Poverty Index (range 0 to 1)" ,
+         "Severe Poor" = "Headcount ratio of Severe Poverty  (K>50%) (%)" ,
+         "Vulnerable" = "Vulnerability to poverty (20% < K <33.32%) (%)"
+       )
+       
+       hch_choropleth(
+         passed_data = agg_measures_data(),
+         catch_sel_measure = map_chart_title,
+         catch_sel_area = sel_area()
+         )
+       
+     })
  
   })
 }
