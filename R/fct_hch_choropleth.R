@@ -29,6 +29,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
 # The map  
   
   highcharter::hcmap(mapData = map_layout_data,
+                     download_map_data = FALSE,
                      data = passed_data %>% 
                        dplyr::mutate(
                          discrete_grps = ggplot2::cut_number(x = b,n = 7),

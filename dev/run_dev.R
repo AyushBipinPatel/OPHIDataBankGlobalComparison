@@ -21,4 +21,7 @@ golem::document_and_reload()
 # Run the application
 run_app()
 
+# Profile the app if needed
+
+profvis::profvis(print(OPHIDataBankGlobalComparison::run_app()))
 
