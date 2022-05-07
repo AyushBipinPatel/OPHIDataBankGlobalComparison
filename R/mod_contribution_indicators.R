@@ -36,7 +36,7 @@ mod_contribution_indicators_ui <- function(id){
                                         choices = c("National","Urban","Rural"),
                                         selected = "National"),
             shiny::actionButton(inputId = ns("cisubmit"),
-                                label = "Show Results"),
+                                label = "Apply Changes"),
             width = 2
         ),
         mainPanel = shiny::mainPanel(

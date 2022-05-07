@@ -46,7 +46,7 @@ mod_headcount_indicators_ui <- function(id){
                                                     "Nutrition"),
                                         selected = "Nutrition"),
             shiny::actionButton(inputId = ns("hrisubmit"),
-                                label = "Show Results")
+                                label = "Apply Changes")
             
           ,width = 2
         ),

@@ -42,7 +42,7 @@ mod_aggregate_measures_ui <- function(id){
                                       selected = "National"),
           
           shiny::actionButton(inputId = ns("agsubmit"),
-                              label = "Show Results"),
+                              label = "Apply Changes"),
           width = 2
         ),
         mainPanel = shiny::mainPanel(
