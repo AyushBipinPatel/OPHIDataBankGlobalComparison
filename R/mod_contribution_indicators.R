@@ -65,11 +65,11 @@ mod_contribution_indicators_server <- function(id){
     
     sel_area <- shiny::eventReactive(input$cisubmit,{
       input$ci_area
-    })
+    }, ignoreNULL = F)
     
     sel_measures <- shiny::eventReactive(input$cisubmit,{
       input$ci_measures
-    })
+    }, ignoreNULL = F)
     
     
     # get reactive data
@@ -79,7 +79,7 @@ mod_contribution_indicators_server <- function(id){
       subset_data_according_section(section = "contri_indicators") %>%
         dplyr::filter(measure_lab == input$ci_measures &
                         area_lab ==  input$ci_area )
-    })
+    }, ignoreNULL = F)
     
     output$table <- DT::renderDataTable({
       DT::datatable(

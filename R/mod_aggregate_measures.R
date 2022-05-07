@@ -70,8 +70,10 @@ mod_aggregate_measures_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    sel_measure <- shiny::eventReactive(input$agsubmit,{input$agmeasures})
-    sel_area <- shiny::eventReactive(input$agsubmit,{input$agarea})
+    sel_measure <- shiny::eventReactive(input$agsubmit,
+                                        {input$agmeasures}, ignoreNULL = F)
+    sel_area <- shiny::eventReactive(input$agsubmit,
+                                     {input$agarea}, ignoreNULL = F)
     
     
     
@@ -80,7 +82,7 @@ mod_aggregate_measures_server <- function(id){
       subset_data_according_section(section = "agg_measures") %>% 
         dplyr::filter(measure_lab == input$agmeasures &
                         area_lab ==  input$agarea)
-    })
+    }, ignoreNULL = F)
     
     
     output$table <- DT::renderDT({

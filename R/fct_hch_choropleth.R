@@ -29,7 +29,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
 # The map  
   
   highcharter::hcmap(mapData = map_layout_data,
-                     download_map_data = FALSE,
+                     download_map_data = FALSE, #setting this to false does avoid the url call and download with every input change, however, it also generates an empty plot for the first set of inputs, submitting inputs again shows the plot. time difference between setting it to T or F is ~ same
                      data = passed_data %>% 
                        dplyr::mutate(
                          discrete_grps = ggplot2::cut_number(x = b,n = 7),

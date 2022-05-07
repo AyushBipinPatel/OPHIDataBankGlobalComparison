@@ -77,15 +77,15 @@ mod_headcount_indicators_server <- function(id){
     
     sel_area <- shiny::eventReactive(input$hrisubmit,{
       input$hri_area
-    })
+    },ignoreNULL = F)
     
     sel_measures <- shiny::eventReactive(input$hrisubmit,{
       input$hri_measures
-    })
+    },ignoreNULL = F)
     
     sel_indicators <- shiny::eventReactive(input$hrisubmit,{
       input$hri_indicators
-    })
+    },ignoreNULL = F)
     
     # get reactive data
     
@@ -94,7 +94,7 @@ mod_headcount_indicators_server <- function(id){
       subset_data_according_section(section = "h_indicators") %>% 
         dplyr::filter(measure_lab == input$hri_measures &
                         area_lab ==  input$hri_area & ind_lab == input$hri_indicators)
-    })
+    },ignoreNULL = F)
     
     output$table <- DT::renderDataTable({
       DT::datatable(
