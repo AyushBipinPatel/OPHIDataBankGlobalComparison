@@ -54,12 +54,12 @@ mod_headcount_indicators_ui <- function(id){
           shiny::tabsetPanel(
             shiny::tabPanel("Spatial Representation",
                             highcharter::highchartOutput(ns("map"),width = "100%",
-                                                         height = "700px")),
+                                                         height = "800px")),
             shiny::tabPanel("Column Chart",
                             highcharter::highchartOutput(ns("bar"), width = "100%", 
-                                                         height = "500px")),
+                                                         height = "800px")),
             shiny::tabPanel("Data Table",
-                            DT::DTOutput(ns("table"),height = "500px"))
+                            DT::DTOutput(ns("table"),height = "800px"))
           ),width = 10
         ))
     )

@@ -46,7 +46,8 @@ hch_stacked_column_chart <- function(data_passed,groups,xaxis,yaxis,stack,title,
     ) %>% 
     highcharter::hc_colors(
       c("#962c20","#632524","#c5a9ab","#a58580","#adc6d6","#7e9eb3","#5d8099","#416680","#154b66","#003650")
-    )
+    )%>% 
+    highcharter::hc_caption(text = cap_charts)
   
   
 }

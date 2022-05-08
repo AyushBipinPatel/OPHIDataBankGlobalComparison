@@ -38,7 +38,8 @@ hch_simple_column_chart <- function(data_passed,x_axis,y_axis,title,flname,toolt
     highcharter::hc_yAxis(title = list(text = ytitle)) %>% 
     highcharter::hc_tooltip(
       pointFormat = tooltip
-    )
+    )%>% 
+    highcharter::hc_caption(text = cap_charts)
   
   
   

@@ -54,6 +54,10 @@ raw_2021_release %>%
 
 map_layout_data <- highcharter::download_map_data("custom/world-robinson-highres.js")
 
+## Caption for every chart is here as the following object
+
+cap_charts = "Source: Ayush Patel, Researcher at OPHI, based on <b>Alkire,S., Kanagaratnam,U. and Suppa,N. (2021.'The Global Multidimensional Poverty Index (MPI) 2021', OPHI Methodological Note 51, Oxford Poverty and Human Development Initiative, University of Oxford.</b>"
+
 # Save objects
 
-usethis::use_data(raw_2021_release, map_layout_data, overwrite = TRUE,internal = TRUE)
+usethis::use_data(raw_2021_release, map_layout_data, cap_charts, overwrite = TRUE,internal = TRUE)

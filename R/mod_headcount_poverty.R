@@ -24,7 +24,7 @@ mod_headcount_poverty_ui <- function(id){
                           highcharter::highchartOutput(ns("bar"),
                                                        width = "100%",height = "800px")),
           shiny::tabPanel("Data Table",
-                          DT::DTOutput(ns("table"),height = "500px"))
+                          DT::DTOutput(ns("table"),height = "800px"))
         )
     )
  
@@ -121,7 +121,8 @@ mod_headcount_poverty_server <- function(id){
         ) %>% 
         highcharter::hc_colors(
           c("#c14c54", "#7c1419","#191919")
-        )
+        ) %>% 
+        highcharter::hc_caption(text = cap_charts)
       
       
     })

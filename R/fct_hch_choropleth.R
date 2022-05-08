@@ -58,6 +58,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
       enabled = TRUE,
       enableMouseWheelZoom = TRUE,
       enableDoubleClickZoom = TRUE
-    )
+    )%>% 
+    highcharter::hc_caption(text = cap_charts)
   
 }
