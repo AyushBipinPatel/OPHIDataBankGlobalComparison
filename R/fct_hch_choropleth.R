@@ -52,6 +52,12 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
     ) %>% 
     highcharter::hc_exporting(
       enabled = TRUE, 
+      buttons = list(
+        contextButton = list(
+          menuItems = c("viewFullscreen", "printChart", "separator", "downloadPNG", 
+                        "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
+        )
+      ),
       filename = paste(catch_sel_measure,": {point.b}<br>Survey : {point.survey}<br>Survey Year: {point.year}")
     ) %>% 
     highcharter::hc_mapNavigation(

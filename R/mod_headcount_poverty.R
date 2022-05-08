@@ -94,7 +94,13 @@ mod_headcount_poverty_server <- function(id){
                                                       y = b),
                                    name = "1.90$ a day") %>% 
         highcharter::hc_exporting(
-        enabled = TRUE, 
+        enabled = TRUE,
+        buttons = list(
+          contextButton = list(
+            menuItems = c("viewFullscreen", "printChart", "separator", "downloadPNG", 
+                          "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
+          )
+        ),
         filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
                          ) %>% 
         highcharter::hc_title(

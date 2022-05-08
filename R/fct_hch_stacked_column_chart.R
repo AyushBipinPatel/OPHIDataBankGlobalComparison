@@ -29,6 +29,12 @@ hch_stacked_column_chart <- function(data_passed,groups,xaxis,yaxis,stack,title,
     ) %>% 
     highcharter::hc_exporting(
       enabled = TRUE, 
+      buttons = list(
+        contextButton = list(
+          menuItems = c("viewFullscreen", "printChart", "separator", "downloadPNG", 
+                        "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
+        )
+      ),
       filename = flname
     ) %>% 
     highcharter::hc_title(
