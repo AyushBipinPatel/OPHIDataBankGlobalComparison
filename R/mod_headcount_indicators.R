@@ -99,7 +99,8 @@ mod_headcount_indicators_server <- function(id){
     output$table <- DT::renderDataTable({
       DT::datatable(
         hri_data() %>% 
-          dplyr::select(-c("measure","misind_lab","ccty","measure_lab")),
+          dplyr::select(-c("measure","misind_lab","ccty","measure_lab"))%>% 
+          dplyr::arrange(cty_lab),
         colnames = c(sel_measures(),"Country","Area","Indicator","Survey","Survey Year","World Region"),
         filter = list(position = 'top', clear = FALSE),
         options = list(

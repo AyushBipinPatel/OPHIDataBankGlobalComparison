@@ -50,7 +50,8 @@ mod_headcount_poverty_server <- function(id){
       DT::datatable(
         data_hp %>% 
           tidyr::fill(cty_lab,.direction = "down") %>% 
-          dplyr::select(-c("ccty")),
+          dplyr::select(-c("ccty")) %>% 
+          dplyr::arrange(cty_lab),
         colnames = c("Measure Value","Country","Measure","Survey","Survey Year","World Region"),
         filter = list(position = 'top', clear = FALSE),
         options = list(
