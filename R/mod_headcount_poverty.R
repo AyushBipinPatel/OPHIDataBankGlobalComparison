@@ -49,8 +49,9 @@ mod_headcount_poverty_server <- function(id){
       
       DT::datatable(
         data_hp %>% 
-          tidyr::fill(cty_lab,.direction = "down"),
-        colnames = c("Value","ISO","Country","Measure","Survey","Survey Year","World Region"),
+          tidyr::fill(cty_lab,.direction = "down") %>% 
+          dplyr::select(-c("ccty")),
+        colnames = c("Measure Value","Country","Measure","Survey","Survey Year","World Region"),
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))

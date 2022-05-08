@@ -84,8 +84,8 @@ mod_contribution_indicators_server <- function(id){
     output$table <- DT::renderDataTable({
       DT::datatable(
         ci_data() %>% 
-          dplyr::select(-c("misind_lab","measure")),
-        colnames = c("Value","ISO","Country","Area","Indicator","Measure","Survey","Survey Year","World Region"),
+          dplyr::select(-c("misind_lab","measure","measure_lab","ccty")),
+        colnames = c(sel_measures(),"Country","Area","Indicator","Survey","Survey Year","World Region"),
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
