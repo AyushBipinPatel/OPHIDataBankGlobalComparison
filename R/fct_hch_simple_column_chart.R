@@ -40,7 +40,12 @@ hch_simple_column_chart <- function(data_passed,x_axis,y_axis,title,flname,toolt
     )  %>% 
     highcharter::hc_chart(zoomType = "x") %>% 
     highcharter::hc_xAxis(title = list(text = xtitle),
-                          scrollbar = list(enabled = T),minrange = 15) %>% 
+                          scrollbar = list(enabled = T),
+                          minrange = 15,
+                          labels = list(
+                            rotation = -90,
+                            step = 1
+                          )) %>% 
     highcharter::hc_yAxis(title = list(text = ytitle)) %>% 
     highcharter::hc_tooltip(
       pointFormat = tooltip

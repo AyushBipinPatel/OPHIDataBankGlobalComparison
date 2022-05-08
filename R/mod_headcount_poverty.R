@@ -111,7 +111,12 @@ mod_headcount_poverty_server <- function(id){
         )  %>% 
         highcharter::hc_chart(zoomType = "x") %>% 
         highcharter::hc_xAxis(title = list(text = NULL),
-                              scrollbar = list(enabled = T),minrange = 5) %>% 
+                              scrollbar = list(enabled = T),
+                              minrange = 5,
+                              labels = list(
+                                rotation = -90,
+                                step = 1
+                              )) %>% 
         highcharter::hc_yAxis(title = list(text = "% of population")) %>% 
         highcharter::hc_tooltip(
           formatter = htmlwidgets::JS(

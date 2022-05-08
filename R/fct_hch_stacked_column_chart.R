@@ -45,7 +45,12 @@ hch_stacked_column_chart <- function(data_passed,groups,xaxis,yaxis,stack,title,
     )  %>% 
     highcharter::hc_chart(zoomType = "x") %>% 
     highcharter::hc_xAxis(title = list(text = xtitle),
-                          scrollbar = list(enabled = T),minrange = 5) %>% 
+                          scrollbar = list(enabled = T),
+                          minrange = 5,
+                          labels = list(
+                            rotation = -90,
+                            step = 1
+                          )) %>% 
     highcharter::hc_yAxis(title = list(text = ytitle)) %>% 
     highcharter::hc_tooltip(
       pointFormat = tooltip
