@@ -112,7 +112,8 @@ mod_headcount_poverty_server <- function(id){
         highcharter::hc_chart(zoomType = "x") %>% 
         highcharter::hc_xAxis(title = list(text = NULL),
                               scrollbar = list(enabled = T),
-                              minrange = 5,
+                              min = 1, # These two things are to control number of bars in the container, scroll bar can work 
+                              max = 50, # These two things are to control number of bars in the container, scroll bar can work
                               labels = list(
                                 rotation = -90,
                                 step = 1
