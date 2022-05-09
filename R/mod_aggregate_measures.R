@@ -47,13 +47,13 @@ mod_aggregate_measures_ui <- function(id){
         ),
         mainPanel = shiny::mainPanel(
           shiny::tabsetPanel(
-            shiny::tabPanel("Spatial Representation",
+            shiny::tabPanel("Map",
                             highcharter::highchartOutput(ns("map"), width = "100%", 
                                                          height = "800px")),
-            shiny::tabPanel("Column Chart",
+            shiny::tabPanel("Chart",
                           highcharter::highchartOutput(ns("bar"), width = "100%", 
                                             height = "800px")),
-            shiny::tabPanel("Data Table",
+            shiny::tabPanel("Table",
                             DT::DTOutput(ns("table"),height = "800px")
             )
           ),width = 10
