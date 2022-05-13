@@ -52,7 +52,9 @@ raw_2021_release %>%
 
 ## Th layout has to be saved as well for internal use
 
-map_layout_data <- highcharter::download_map_data("custom/world-robinson-highres.js")
+#map_layout_data <- highcharter::download_map_data("custom/world-robinson-highres.js")
+
+###### why are the above lines commented?? Well, is download_map_data is set to FALSE, hcmap automatically makes a world map, that's what we need, so no need to download map data
 
 ## Caption for every chart is here as the following object
 
@@ -60,4 +62,4 @@ cap_charts = "Source: Ayush Patel, Researcher at OPHI, based on <b>Alkire,S., Ka
 
 # Save objects
 
-usethis::use_data(raw_2021_release, map_layout_data, cap_charts, overwrite = TRUE,internal = TRUE)
+usethis::use_data(raw_2021_release, cap_charts, overwrite = TRUE,internal = TRUE)

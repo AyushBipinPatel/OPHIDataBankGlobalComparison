@@ -28,7 +28,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
   
 # The map  
   
-  highcharter::hcmap(mapData = map_layout_data,
+  highcharter::hcmap(#mapData = map_layout_data, ###### why are the above lines commented?? Well, is download_map_data is set to FALSE, hcmap automatically makes a world map, that's what we need, so no need to download map data
                      download_map_data = FALSE, #setting this to false does avoid the url call and download with every input change, however, it also generates an empty plot for the first set of inputs, submitting inputs again shows the plot. time difference between setting it to T or F is ~ same
                      data = passed_data %>% 
                        dplyr::mutate(
