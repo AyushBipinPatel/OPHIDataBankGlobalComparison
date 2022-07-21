@@ -38,7 +38,9 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
                        ) ,
                      value = "discrete_grps",
                      name= NULL,
-                     joinBy =  c("iso-a3","ccty")) %>%
+                     joinBy =  c("iso-a3","ccty"),
+                     nullColor = "#DDDDDD",
+                     borderColor = "#FFFFFF") %>%
     highcharter::hc_colorAxis(
       dataClassColor = "category",
       dataClasses = dta_class
@@ -55,6 +57,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
                  "#f18b00",
                  "#cb1724",
                  "#5b1a18")
+      
     ) %>% 
     highcharter::hc_exporting(
       enabled = TRUE, 
@@ -70,7 +73,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
       enabled = TRUE,
       enableMouseWheelZoom = TRUE,
       enableDoubleClickZoom = TRUE
-    )%>% 
+    ) %>% 
     highcharter::hc_caption(text = cap_charts)
   
 }
