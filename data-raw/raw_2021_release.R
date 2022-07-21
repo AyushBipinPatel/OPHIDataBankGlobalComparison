@@ -63,3 +63,4 @@ cap_charts = "Source: Ayush Patel, Researcher at OPHI, based on <b>Alkire,S., Ka
 # Save objects
 
 usethis::use_data(raw_2021_release, cap_charts, overwrite = TRUE,internal = TRUE)
+
