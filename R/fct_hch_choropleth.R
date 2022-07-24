@@ -12,17 +12,33 @@
 
 hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
   
+ 
+  
 # create a data class for the hc_* function  
+  
+  ### first need to check if the range needs to be broken into
+  ### 5 or 7 groups
+  
+  if(anyDuplicated(ggplot2:::breaks(x = passed_data %>% 
+                                    dplyr::pull(b),
+                                    equal = "numbers",
+                                    nbins = 7)) > 0){
+    grps <- 5
+  }else{
+    grps <- 7
+  }
+  
+  ### now create data class
   
   dta_class <- dplyr::tibble(
     name = passed_data %>% 
       dplyr::mutate(
-        discrete_grps = ggplot2::cut_number(x = b,n = 7)
+        discrete_grps = ggplot2::cut_number(x = b,n = grps)
       ) %>% 
       dplyr::pull(discrete_grps) %>% 
       levels(),
-    from = c(1:7),
-    to= c(2:8)
+    from = c(1:grps),
+    to= c(2:(grps+1))
   ) %>% 
     highcharter::list_parse()
   
@@ -33,7 +49,7 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
                      download_map_data = FALSE, #setting this to false does avoid the url call and download with every input change, however, it also generates an empty plot for the first set of inputs, submitting inputs again shows the plot. time difference between setting it to T or F is ~ same
                      data = passed_data %>%
                        dplyr::mutate(
-                         discrete_grps = ggplot2::cut_number(x = b,n = 7),
+                         discrete_grps = ggplot2::cut_number(x = b,n = grps),
                          discrete_grps = as.numeric(discrete_grps)
                        ) ,
                      value = "discrete_grps",
@@ -50,13 +66,21 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
       headerFormat = paste("<b>{point.key} at ",catch_sel_area, " Level</b><br>")
     ) %>% 
     highcharter::hc_colors(
-      colors = c("#b0d9cb",
-                 "#abcd72",
-                 "#e2d200",
-                 "#fdd262",
-                 "#f18b00",
-                 "#cb1724",
-                 "#5b1a18")
+      if(grps == 7){
+        colors = c("#b0d9cb",
+                   "#abcd72",
+                   "#e2d200",
+                   "#fdd262",
+                   "#f18b00",
+                   "#cb1724",
+                   "#5b1a18")
+      }else{
+        colors = c("#b0d9cb",
+                   "#abcd72",
+                   "#f18b00",
+                   "#cb1724",
+                   "#5b1a18")
+      }
       
     ) %>% 
     highcharter::hc_exporting(
