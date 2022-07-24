@@ -56,6 +56,10 @@ mod_headcount_poverty_server <- function(id){
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        ),
+        caption = htmltools::tags$caption(
+          style = 'caption-side: top; text-align: center;', 
+          htmltools::em("Measures of Poverty: MPI headcount and $1.90 a day")
         )
       )
       

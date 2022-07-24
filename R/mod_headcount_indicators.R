@@ -105,6 +105,11 @@ mod_headcount_indicators_server <- function(id){
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        ),
+        caption = htmltools::tags$caption(
+          style = 'caption-side: top; text-align: center;', 
+          htmltools::em(paste(sel_measures(),"of", sel_indicators(),
+                              "at",sel_area(),"level"))
         )
       )
     })

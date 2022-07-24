@@ -87,6 +87,15 @@ mod_aggregate_measures_server <- function(id){
     
     output$table <- DT::renderDT({
       
+      map_chart_title <- switch (
+        sel_measure(),
+        "Headcount ratio" = "H - Headcount ratio of poverty (%)" ,
+        "Intensity" = "A - Intensity of Poverty (%)" ,
+        "MPI" = "MPI - Multidimensional Poverty Index (range 0 to 1)" ,
+        "Severe Poor" = "Headcount ratio of Severe Poverty  (K>50%) (%)" ,
+        "Vulnerable" = "Vulnerability to poverty (20% < K <33.32%) (%)"
+      )
+      
       DT::datatable(
         agg_measures_data() %>% 
           dplyr::select(-c("ind_lab","misind_lab","measure","ccty","measure_lab"))%>% 
@@ -95,6 +104,10 @@ mod_aggregate_measures_server <- function(id){
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        ),
+        caption = htmltools::tags$caption(
+          style = 'caption-side: top; text-align: center;', 
+          htmltools::em(paste(map_chart_title,"at",sel_area(),"level"))
         )
                     )
       

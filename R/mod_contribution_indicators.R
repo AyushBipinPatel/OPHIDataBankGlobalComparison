@@ -90,6 +90,10 @@ mod_contribution_indicators_server <- function(id){
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
+        ),
+        caption = htmltools::tags$caption(
+          style = 'caption-side: top; text-align: center;', 
+          htmltools::em(paste(sel_measures(),"of poverty at", sel_area(),"level"))
         )
       )
     })
