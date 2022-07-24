@@ -74,6 +74,12 @@ hch_choropleth <- function(passed_data,catch_sel_measure,catch_sel_area){
       enableMouseWheelZoom = TRUE,
       enableDoubleClickZoom = TRUE
     ) %>% 
-    highcharter::hc_caption(text = cap_charts)
+    highcharter::hc_caption(text = cap_charts) %>% 
+    highcharter::hc_title(
+      text = paste(catch_sel_measure,"at", catch_sel_area, "Level."),
+      margin = 20,
+      align = "left",
+      style = list(color = "#22A884", useHTML = TRUE)
+    ) 
   
 }
