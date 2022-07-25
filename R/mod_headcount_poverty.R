@@ -154,7 +154,14 @@ mod_headcount_poverty_server <- function(id){
              }
              }
         }"
-          )
+          ),
+        symbolRadius = htmlwidgets::JS("function(){
+                   if(this.series.name == '1.90$ a day'){
+                   return 0;
+                   }else{
+                   return 4;
+                   }
+        }")
         )
       
       
