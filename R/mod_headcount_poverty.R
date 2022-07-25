@@ -140,7 +140,22 @@ mod_headcount_poverty_server <- function(id){
         highcharter::hc_colors(
           c("#c14c54", "#7c1419","#191919")
         ) %>% 
-        highcharter::hc_caption(text = cap_charts)
+        highcharter::hc_caption(text = cap_charts) %>% 
+        highcharter::hc_legend(
+          labelFormatter = htmlwidgets::JS(
+            "function () {
+             if(this.name == '1.90$ a day'){
+              return 'poor as per 1.90$ a day measure';
+             }else{
+             if(this.name == 'poor_not_severe'){
+              return 'MPI poor but not in severe poverty';
+             }else{
+              return 'MPI Poor and in severe poverty';
+             }
+             }
+        }"
+          )
+        )
       
       
     })
