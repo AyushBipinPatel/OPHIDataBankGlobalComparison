@@ -10,7 +10,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic 
     fluidPage(
-      shiny::navbarPage(#theme = bslib::bs_theme(bootswatch = "minty"),
+      shiny::navbarPage(theme = bslib::bs_theme(bootswatch = "minty", version  = 4),
                         title = "OPHI Data Bank - Global Comparisions",
                         shiny::tabPanel(title = "About",
                                         add_intro_text(),
