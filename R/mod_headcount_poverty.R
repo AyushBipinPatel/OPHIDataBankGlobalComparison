@@ -25,6 +25,17 @@ mod_headcount_poverty_ui <- function(id){
                                                        width = "100%",height = "800px")),
           shiny::tabPanel("Table",
                           DT::DTOutput(ns("table"),height = "800px"))
+        ),
+        shiny::tags$br(),
+        shiny::fluidRow(
+          shiny::column(width = 6,
+                        highcharter::highchartOutput(ns("scatter1"),
+                                                     width = "100%",height = "800px")            
+                        ),
+          shiny::column(width = 6,
+                        highcharter::highchartOutput(ns("scatter2"),
+                                                     width = "100%",height = "800px")   
+                        )
         )
     )
  
@@ -41,7 +52,7 @@ mod_headcount_poverty_server <- function(id){
     data_hp <- raw_2021_release %>% 
       dplyr::filter(measure %in% c("H","H_190","sev") & 
                       (is.na(area_lab) |area_lab == "National")) %>% 
-      dplyr::select(-c("area_lab","ind_lab","misind_lab","measure")) %>% 
+      dplyr::select(-c("area_lab","ind_lab","misind_lab")) %>% 
       dplyr::arrange(ccty) %>% 
       tidyr::fill(cty_lab,.direction = "down")
     
@@ -49,6 +60,7 @@ mod_headcount_poverty_server <- function(id){
       
       DT::datatable(
         data_hp %>% 
+          dplyr::select(-measure) %>% 
           tidyr::fill(cty_lab,.direction = "down") %>% 
           dplyr::select(-c("ccty")) %>% 
           dplyr::arrange(cty_lab),
@@ -69,6 +81,7 @@ mod_headcount_poverty_server <- function(id){
       
       
       highcharter::hchart(object = data_hp %>% 
+                            dplyr::select(-measure) %>% 
                             dplyr::filter(measure_lab!= "1.90$ a day") %>% 
                             tidyr::pivot_wider(names_from = measure_lab,values_from = b) %>% 
                             dplyr::mutate(
@@ -105,7 +118,7 @@ mod_headcount_poverty_server <- function(id){
                           "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
           )
         ),
-        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+        filename = "Headcount Ratios: Multidimensional Poverty and $1.90 a day at the country level"
                          ) %>% 
         highcharter::hc_title(
           text = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level",
@@ -167,7 +180,172 @@ mod_headcount_poverty_server <- function(id){
       
     })
  
+  
+  
+    output$scatter1 <- highcharter::renderHighchart({
+    highcharter::hchart(
+      object = dplyr::left_join(
+        data_hp %>% 
+          dplyr::filter(measure %in% c("H")) %>% 
+          dplyr::rename("H" = "b") %>% 
+          dplyr::select(-c( measure_lab,measure)),
+        data_hp %>% 
+          dplyr::filter(measure %in% c("H_190")) %>% 
+          dplyr::rename("H_190" = "b","year_190" = "year") %>% 
+          dplyr::select(-c(w_region,cty_lab, measure_lab,
+                           survey,measure)),
+        by = c("ccty" = "ccty")
+      ),
+      type = "scatter",
+      highcharter::hcaes(H, H_190)
+    ) %>% 
+      highcharter::hc_add_series(
+        dashStyle = "ShortDash",
+        data = list(
+          list(
+            x = 0,
+            y = 0
+          ),
+          list(
+            x = 100,
+            y = 100
+          )
+        )
+      ) %>% 
+      highcharter::hc_exporting(
+        enabled = TRUE,
+        buttons = list(
+          contextButton = list(
+            menuItems = c("viewFullscreen", "printChart", "separator", "downloadPNG", 
+                          "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
+          )
+        ),
+        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+      ) %>% 
+      highcharter::hc_title(
+        text = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level",
+        margin = 20,
+        align = "left",
+        style = list(color = "#22A884", useHTML = TRUE)
+      )  %>% 
+      highcharter::hc_chart(zoomType = "yx") %>% 
+      highcharter::hc_xAxis(title = list(text = "Population (%) Multidimensionally Poor"),
+                            scrollbar = list(enabled = T)
+                            ) %>% 
+      highcharter::hc_yAxis(title = list(text = "Population (%) of poor as ber $1.90 a day ")) %>% 
+      highcharter::hc_tooltip(
+        formatter = htmlwidgets::JS(
+          'function(){
+              return this.point.cty_lab + 
+          "<br> Percentage Poor as per $1.90 a day :" + this.point.y + 
+          "<br> Percentage of MPI poor" + this.point.x  + 
+          "<br>$1.90 a day Survey year : " + this.point.year_190 +
+          "<br> MPI Survey: " + this.point.survey +
+          "<br>MPI Survey year : " + this.point.year ;
+          }'
+        )
+      ) %>% 
+        highcharter::hc_plotOptions(
+          scatter = list(
+            dataLabels = list(
+              enabled = TRUE,
+              formatter = htmlwidgets::JS(
+                'function(){
+                return this.point.ccty;
+                }'
+              )
+            )
+          ),
+          series = list(
+            color = "#c6431f"
+          )
+        )
+    
   })
+  
+    output$scatter2 <- highcharter::renderHighchart({
+    highcharter::hchart(
+      object = dplyr::left_join(
+        data_hp %>% 
+          dplyr::filter(measure %in% c("sev")) %>% 
+          dplyr::rename("sev" = "b") %>% 
+          dplyr::select(-c( measure_lab,measure)),
+        data_hp %>% 
+          dplyr::filter(measure %in% c("H_190")) %>% 
+          dplyr::rename("H_190" = "b","year_190" = "year") %>% 
+          dplyr::select(-c(w_region,cty_lab, measure_lab,
+                           survey,measure)),
+        by = c("ccty" = "ccty")
+      ),
+      type = "scatter",
+      highcharter::hcaes(sev, H_190)
+    ) %>% 
+      highcharter::hc_add_series(
+        dashStyle = "ShortDash",
+        data = list(
+          list(
+            x = 0,
+            y = 0
+          ),
+          list(
+            x = 100,
+            y = 100
+          )
+        )
+      ) %>% 
+      highcharter::hc_exporting(
+        enabled = TRUE,
+        buttons = list(
+          contextButton = list(
+            menuItems = c("viewFullscreen", "printChart", "separator", "downloadPNG", 
+                          "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
+          )
+        ),
+        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+      ) %>% 
+      highcharter::hc_title(
+        text = "Headcount Ratios: Severe Multidimensional Poverty and $1.90 a day at the country level",
+        margin = 20,
+        align = "left",
+        style = list(color = "#22A884", useHTML = TRUE)
+      )  %>% 
+      highcharter::hc_chart(zoomType = "yx") %>% 
+      highcharter::hc_xAxis(title = list(text = "Population (%)in Severe Multidimensionally Poverty"),
+                            scrollbar = list(enabled = T)
+      ) %>% 
+      highcharter::hc_yAxis(title = list(text = "Population (%) of poor as ber $1.90 a day ")) %>% 
+      highcharter::hc_tooltip(
+        formatter = htmlwidgets::JS(
+          'function(){
+              return this.point.cty_lab + 
+          "<br> Percentage Poor as per $1.90 a day :" + this.point.y + 
+          "<br> Percentage of Severe MPI poor (k > 50) :" + this.point.x  + 
+          "<br>$1.90 a day Survey year : " + this.point.year_190 +
+          "<br> MPI Survey: " + this.point.survey +
+          "<br>MPI Survey year : " + this.point.year ;
+          }'
+        )
+      )%>% 
+        highcharter::hc_plotOptions(
+          scatter = list(
+            dataLabels = list(
+              enabled = TRUE,
+              formatter = htmlwidgets::JS(
+                'function(){
+                return this.point.ccty;
+                }'
+              )
+            )
+          ),
+          series = list(
+            color = "#c6431f"
+          )
+        )
+    
+  })
+  
+  })
+  
 }
     
 ## To be copied in the UI
