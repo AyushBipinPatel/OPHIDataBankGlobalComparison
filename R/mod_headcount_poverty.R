@@ -220,10 +220,10 @@ mod_headcount_poverty_server <- function(id){
                           "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
           )
         ),
-        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+        filename = "Headcount Ratios: Multidimensional Poverty and $1.90 a day at the country level"
       ) %>% 
       highcharter::hc_title(
-        text = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level",
+        text = "Headcount Ratios: Multidimensional Poverty and $1.90 a day at the country level",
         margin = 20,
         align = "left",
         style = list(color = "#22A884", useHTML = TRUE)
@@ -301,7 +301,7 @@ mod_headcount_poverty_server <- function(id){
                           "downloadJPEG", "downloadPDF", "downloadSVG","separator", "downloadCSV")
           )
         ),
-        filename = "Headcount Ratios: Multidimensional Pverty and $1.90 a day at the country level"
+        filename = "Headcount Ratios: Multidimensional Poverty and $1.90 a day at the country level"
       ) %>% 
       highcharter::hc_title(
         text = "Headcount Ratios: Severe Multidimensional Poverty and $1.90 a day at the country level",
@@ -310,7 +310,7 @@ mod_headcount_poverty_server <- function(id){
         style = list(color = "#22A884", useHTML = TRUE)
       )  %>% 
       highcharter::hc_chart(zoomType = "yx") %>% 
-      highcharter::hc_xAxis(title = list(text = "Population (%)in Severe Multidimensionally Poverty"),
+      highcharter::hc_xAxis(title = list(text = "Population (%) in Severe Multidimensional Poverty"),
                             scrollbar = list(enabled = T)
       ) %>% 
       highcharter::hc_yAxis(title = list(text = "Population (%) of poor as ber $1.90 a day ")) %>% 
