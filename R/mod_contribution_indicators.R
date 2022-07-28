@@ -84,9 +84,11 @@ mod_contribution_indicators_server <- function(id){
     output$table <- DT::renderDataTable({
       DT::datatable(
         ci_data() %>% 
-          dplyr::select(-c("misind_lab","measure","measure_lab","ccty"))%>% 
-          dplyr::arrange(cty_lab),
-        colnames = c(sel_measures(),"Country","Area","Indicator","Survey","Survey Year","World Region"),
+          tidyr::pivot_wider(names_from = ind_lab,values_from = b) %>% 
+          dplyr::select(-c("misind_lab","measure","measure_lab","ccty","area_lab"))%>% 
+          dplyr::arrange(cty_lab) %>% 
+          dplyr::select(cty_lab:w_region,Nutrition,dplyr::everything()),
+        colnames = c("Country","Survey","Survey Year","World Region",levels(raw_2021_release$ind_lab)),
         filter = list(position = 'top', clear = FALSE),
         options = list(
           columnDefs = list(list(className = 'dt-center', targets = "_all"))
