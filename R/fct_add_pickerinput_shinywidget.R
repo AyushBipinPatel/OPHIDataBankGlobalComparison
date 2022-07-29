@@ -12,12 +12,13 @@
 #' @noRd
 
 
-add_pickerinput_shinywidget <- function(inputID,label,choices,selected){
+add_pickerinput_shinywidget <- function(inputID,label,choices,selected,multiple = F){
   shinyWidgets::pickerInput(
     inputId = inputID,
     label = label,
     choices = choices,
     selected = selected,
+    multiple = multiple,
     options = list(
       `live-search` = TRUE)
   )

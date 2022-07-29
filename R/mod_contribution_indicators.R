@@ -37,10 +37,26 @@ mod_contribution_indicators_ui <- function(id){
                                         selected = "National"),
             shiny::actionButton(inputId = ns("cisubmit"),
                                 label = "Apply Changes"),
+            shiny::conditionalPanel(
+              condition = "input.mod_ci_tubbs == 'Chart'",
+              ns = ns,
+              shiny::tags$hr(),
+              shiny::tags$h6("Additional Controls for Column Chart"),
+              add_pickerinput_shinywidget(
+                inputID = ns("cicolumnchoice"),
+                label = "Choose countries to compare",
+                choices = levels(raw_2021_release$cty_lab),
+                selected = NULL,
+                multiple = T
+              ),
+              
+              shiny::actionButton(inputId = ns("cicolumnreset"),
+                                  "Reset Chart")
+            ),
             width = 2
         ),
         mainPanel = shiny::mainPanel(
-          shiny::tabsetPanel(
+          shiny::tabsetPanel(id = ns("mod_ci_tubbs"),
             
             shiny::tabPanel("Chart",
                             highcharter::highchartOutput(ns("bar"),width = "100%",
@@ -62,6 +78,20 @@ mod_contribution_indicators_server <- function(id){
     ns <- session$ns
     
     # get reactive inputs
+    
+    sel_col_countries <- reactive(input$cicolumnchoice)
+    
+    sel_col_countries_len <- reactive({
+      length(input$cicolumnchoice)
+    })
+    
+    
+    shiny::observeEvent(input$cicolumnreset,{
+      shinyWidgets::updatePickerInput(inputId = "cicolumnchoice",
+                                      choices = levels(raw_2021_release$cty_lab),
+                                      session = session)
+    }
+    )
     
     sel_area <- shiny::eventReactive(input$cisubmit,{
       input$ci_area
@@ -102,13 +132,22 @@ mod_contribution_indicators_server <- function(id){
     
     output$bar <- highcharter::renderHighchart({
       
+      #prep data
+      
+      if(is.null(sel_col_countries())){
+        chart_data <- ci_data() 
+      }else{
+        chart_data <- ci_data() %>%
+          dplyr::filter(cty_lab %in% sel_col_countries())
+      }
+      
       col_chart_title <- switch (
         sel_measures(),
         "Absolute contribution" = "Absolute contribution",
         "Relative contribution" = "Percentage (%) Contribution"
       )
       
-      hch_stacked_column_chart(data_passed = ci_data() %>%
+      hch_stacked_column_chart(data_passed = chart_data %>%
                                  tidyr::pivot_wider(names_from = ind_lab,values_from = b,values_fill = 0) %>%
                                  tidyr::pivot_longer(cols = unique(raw_2021_release$ind_lab)[-10],names_to = "ind_lab",values_to = "b") %>% # check is 10 is NA, if not change to appropriate number
                                  dplyr::group_by(cty_lab) %>% 

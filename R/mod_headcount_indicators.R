@@ -46,12 +46,28 @@ mod_headcount_indicators_ui <- function(id){
                                                     "Assets"),
                                         selected = "Nutrition"),
             shiny::actionButton(inputId = ns("hrisubmit"),
-                                label = "Apply Changes")
+                                label = "Apply Changes"),
+            shiny::conditionalPanel(
+              condition = "input.mod_hri_tubbs == 'Chart'",
+              ns = ns,
+              shiny::tags$hr(),
+              shiny::tags$h6("Additional Controls for Column Chart"),
+              add_pickerinput_shinywidget(
+                inputID = ns("hricolumnchoice"),
+                label = "Choose countries to compare",
+                choices = levels(raw_2021_release$cty_lab),
+                selected = NULL,
+                multiple = T
+              ),
+              
+              shiny::actionButton(inputId = ns("hricolumnreset"),
+                                  "Reset Chart")
+            ),
             
-          ,width = 2
+          width = 2
         ),
         mainPanel = shiny::mainPanel(
-          shiny::tabsetPanel(
+          shiny::tabsetPanel(id = ns("mod_hri_tubbs"),
             shiny::tabPanel("Map",
                             highcharter::highchartOutput(ns("map"),width = "100%",
                                                          height = "800px")),
@@ -74,6 +90,20 @@ mod_headcount_indicators_server <- function(id){
     ns <- session$ns
     
     # get reactive inputs
+    
+    sel_col_countries <- reactive(input$hricolumnchoice)
+    
+    sel_col_countries_len <- reactive({
+      length(input$hricolumnchoice)
+    })
+    
+    
+    shiny::observeEvent(input$hricolumnreset,{
+      shinyWidgets::updatePickerInput(inputId = "hricolumnchoice",
+                                      choices = levels(raw_2021_release$cty_lab),
+                                      session = session)
+    }
+    )
     
     sel_area <- shiny::eventReactive(input$hrisubmit,{
       input$hri_area
@@ -115,7 +145,19 @@ mod_headcount_indicators_server <- function(id){
     })
     
     output$bar <- highcharter::renderHighchart({
-      hch_simple_column_chart(hri_data() %>% dplyr::arrange(dplyr::desc(b)),
+      
+      # prep data for chart
+      if(is.null(sel_col_countries())){
+        chart_data <- hri_data() %>%
+          dplyr::arrange(dplyr::desc(b))
+      }else{
+        chart_data <- hri_data() %>%
+          dplyr::filter(cty_lab %in% sel_col_countries()) %>% 
+          dplyr::arrange(dplyr::desc(b))
+      }
+      
+      
+      hch_simple_column_chart(chart_data,
                               x_axis = "cty_lab",
                               y_axis = "b",
                               title = paste0(sel_measures()," (%) of ",sel_indicators()," at ",sel_area()," Level"),

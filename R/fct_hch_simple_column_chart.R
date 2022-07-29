@@ -41,8 +41,12 @@ hch_simple_column_chart <- function(data_passed,x_axis,y_axis,title,flname,toolt
     highcharter::hc_chart(zoomType = "x") %>% 
     highcharter::hc_xAxis(title = list(text = xtitle),
                           scrollbar = list(enabled = T),
-                          min = 1, # These two things are to control number of bars in the container, scroll bar can work 
-                          max = 50, # These two things are to control number of bars in the container, scroll bar can work
+                          min = 0, # These two things are to control number of bars in the container, scroll bar can work 
+                          max = if(length(unique(data_passed$cty_lab))>50){
+                            50
+                            }else{
+                              length(unique(data_passed$cty_lab))
+                              }, # These two things are to control number of bars in the container, scroll bar can work
                           labels = list(
                             rotation = -90,
                             step = 1

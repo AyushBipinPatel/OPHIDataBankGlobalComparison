@@ -43,10 +43,27 @@ mod_aggregate_measures_ui <- function(id){
           
           shiny::actionButton(inputId = ns("agsubmit"),
                               label = "Apply Changes"),
+          shiny::conditionalPanel(
+            condition = "input.mod_agg_tubbs == 'Chart'",
+            ns = ns,
+            shiny::tags$hr(),
+            shiny::tags$h6("Additional Controls for Column Chart"),
+            add_pickerinput_shinywidget(
+              inputID = ns("agcolumnchoice"),
+              label = "Choose countries to compare",
+              choices = levels(raw_2021_release$cty_lab),
+              selected = NULL,
+              multiple = T
+            ),
+            
+            shiny::actionButton(inputId = ns("agcolumnreset"),
+                                "Reset Chart")
+            ),
+          
           width = 2
         ),
         mainPanel = shiny::mainPanel(
-          shiny::tabsetPanel(
+          shiny::tabsetPanel(id = ns("mod_agg_tubbs"),
             shiny::tabPanel("Map",
                             highcharter::highchartOutput(ns("map"), width = "100%", 
                                                          height = "800px")),
@@ -69,7 +86,21 @@ mod_aggregate_measures_ui <- function(id){
 mod_aggregate_measures_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    sel_col_countries <- reactive(input$agcolumnchoice)
     
+    sel_col_countries_len <- reactive({
+      length(input$agcolumnchoice)
+    })
+    
+
+    shiny::observeEvent(input$agcolumnreset,{
+      shinyWidgets::updatePickerInput(inputId = "agcolumnchoice",
+                                      choices = levels(raw_2021_release$cty_lab),
+                                      session = session)
+    }
+    )
+
     sel_measure <- shiny::eventReactive(input$agsubmit,
                                         {input$agmeasures}, ignoreNULL = F)
     sel_area <- shiny::eventReactive(input$agsubmit,
@@ -126,9 +157,20 @@ mod_aggregate_measures_server <- function(id){
         "Vulnerable" = "Vulnerability to poverty (20% < K <33.32%) (%)"
       )
       
+      # prep data for chart
+      
+      if(is.null(sel_col_countries())){
+        chart_data <- agg_measures_data() %>%
+          dplyr::arrange(dplyr::desc(b))
+      }else{
+         chart_data <- agg_measures_data() %>%
+          dplyr::filter(cty_lab %in% sel_col_countries()) %>% 
+          dplyr::arrange(dplyr::desc(b))
+      }
+      
       # now the chart function
       
-      hch_simple_column_chart(agg_measures_data() %>% dplyr::arrange(dplyr::desc(b)),
+      hch_simple_column_chart(chart_data,
                               x_axis = "cty_lab",
                               y_axis = "b",
                               title = paste0(col_chart_title," at ",sel_area()," Level"),
